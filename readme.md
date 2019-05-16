@@ -1,72 +1,53 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+1. Using standard lamp stack
+2. Setup MYSQL database called 'am_books'
+	"CREATE DATABASE am_books;"
+3. Create privaliged user 'joe' with password 'password'
+	"mysql -u root -p"
+	"GRANT ALL PRIVILEGES ON *.* TO 'joe'@'localhost' IDENTIFIED BY 'password';"
+	
+4. Run migration 'php artisan migrate'
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+5. Run 'vendor/bin/phpunit' from project root directory to load sample books.
 
-## About Laravel
+6. Run server 'php artisan serve'
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+7. Open browser and visit below to verify setup works:
+	i.  'http://localhost:8000/api/book'
+	ii. 'http://localhost:8000/api/book/titles'
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+For use of the API:
+Use below table for entry points:
++--------+-----------+----------------------+--------------+-------------------------------------------------+------------+
+| Domain | Method    | URI                  | Name         | Action                                          | Middleware |
++--------+-----------+----------------------+--------------+-------------------------------------------------+------------+
+|        | GET|HEAD  | api/book             | book.index   | App\Http\Controllers\API\BookController@index   | api        |
+|        | POST      | api/book             | book.store   | App\Http\Controllers\API\BookController@store   | api        |
+|        | GET|HEAD  | api/book/create      | book.create  | App\Http\Controllers\API\BookController@create  | api        |
+|        | GET|HEAD  | api/book/titles      | book.titles  | App\Http\Controllers\API\BookController@titles  | api        |
+|        | GET|HEAD  | api/book/{book}      | book.show    | App\Http\Controllers\API\BookController@show    | api        |
+|        | PUT|PATCH | api/book/{book}      | book.update  | App\Http\Controllers\API\BookController@update  | api        |
+|        | DELETE    | api/book/{book}      | book.destroy | App\Http\Controllers\API\BookController@destroy | api        |
+|        | GET|HEAD  | api/book/{book}/edit | book.edit    | App\Http\Controllers\API\BookController@edit    | api        |
++--------+-----------+----------------------+--------------+-------------------------------------------------+------------+
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+Conditions for entries as per below. Code qualifies entries and returns notification if data supplied doesn't comply with 
+requirements. Returned fault code is '500' + message
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+    "title"         - Book title, limited to 200 characters,
+    "author"        - Book author, limited to 100 characters,
+    "blurb"         - Book blurb,
+    "ISBN"          - Book ISBN ,limtied to 13 characters
+    "release_year"  - Book release year, limited to 4 characters
+    "number_pages"  - Numer of pages, must be numeric
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1400 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    All data required for sucsessful entry. NULL is not acceptable for any value.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Example:
+    "title":"Book 1",
+    "author":"Person 1",
+    "blurb":"Info 1",
+    "ISBN":"1236454",
+    "release_year":"2019",
+    "number_pages":"345"
